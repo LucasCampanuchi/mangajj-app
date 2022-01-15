@@ -26,7 +26,7 @@ class TitleDefault extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15.0),
-                child: DeafultText(
+                child: DefaultText(
                   text: text,
                 ),
               )

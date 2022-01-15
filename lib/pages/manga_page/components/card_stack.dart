@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mangajj/shared/text/text.dart';
 
-class CardChapter extends StatelessWidget {
-  const CardChapter({Key? key}) : super(key: key);
+class CardChapterStack extends StatelessWidget {
+  const CardChapterStack({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,8 @@ class CardChapter extends StatelessWidget {
             ),
           ),
         ),
-        const DeafultText(
-          text: 'Capítulo #1',
+        const DefaultText(
+          text: 'Capítulo #2',
         )
       ],
     );

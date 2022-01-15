@@ -1,7 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mangajj/layout/pages/home_page/view/home_page.dart';
-
-import 'layout/pages/manga_page/view/manga_page.dart';
+import 'package:mangajj/pages/home_page/view/home_page.dart';
+import 'package:mangajj/pages/image_page/view/image_page.dart';
+import 'package:mangajj/pages/manga_page/view/manga_page.dart';
 
 class AppModule extends Module {
   @override
@@ -15,7 +15,15 @@ class AppModule extends Module {
         ),
         ChildRoute(
           '/mangapage',
-          child: (context, args) => const MangaPage(),
-        )
+          child: (context, args) => MangaPage(
+            manga: args.data['manga'],
+          ),
+        ),
+        ChildRoute(
+          '/imagepage',
+          child: (context, args) => ImagePage(
+            manga: args.data['manga'],
+          ),
+        ),
       ];
 }
