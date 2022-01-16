@@ -6,7 +6,7 @@ import 'package:mangajj/layout/colors.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CardManga extends StatefulWidget {
-  final MangaModel manga;
+  final Manga manga;
   const CardManga({
     Key? key,
     required this.manga,

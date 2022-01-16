@@ -14,7 +14,7 @@ abstract class _HomePageControllerBase with Store {
   TextEditingController searchText = TextEditingController();
 
   @observable
-  List<MangaModel>? listManga;
+  List<Manga>? listManga;
 
   @observable
   bool isSearch = false;
@@ -36,9 +36,8 @@ abstract class _HomePageControllerBase with Store {
         var response = await dio.get('manga?title=' + searchText.text);
 
         if (response.statusCode == 200) {
-          listManga = List.from(response.data)
-              .map((e) => MangaModel.fromJson(e))
-              .toList();
+          listManga =
+              List.from(response.data).map((e) => Manga.fromJson(e)).toList();
         } else if (response.statusCode == 404) {
           listManga = [];
         }

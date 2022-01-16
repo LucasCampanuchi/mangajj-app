@@ -7,6 +7,7 @@ class ApiUtil {
           baseUrl: 'https://mangajj.herokuapp.com/',
           headers: {
             "Accept": "application/json",
+            'Access-Control-Allow-Origin': 'true'
           },
           validateStatus: (status) {
             return status! <= 500;

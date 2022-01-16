@@ -27,13 +27,13 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
   final _$listMangaAtom = Atom(name: '_HomePageControllerBase.listManga');
 
   @override
-  List<MangaModel>? get listManga {
+  List<Manga>? get listManga {
     _$listMangaAtom.reportRead();
     return super.listManga;
   }
 
   @override
-  set listManga(List<MangaModel>? value) {
+  set listManga(List<Manga>? value) {
     _$listMangaAtom.reportWrite(value, super.listManga, () {
       super.listManga = value;
     });

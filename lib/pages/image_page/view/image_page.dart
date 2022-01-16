@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/api/models/manga.model.dart';
 
 class ImagePage extends StatelessWidget {
-  final MangaModel manga;
+  final Manga manga;
 
   const ImagePage({
     Key? key,

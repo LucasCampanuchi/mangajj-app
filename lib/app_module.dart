@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mangajj/pages/home_page/view/home_page.dart';
 import 'package:mangajj/pages/image_page/view/image_page.dart';
 import 'package:mangajj/pages/manga_page/view/manga_page.dart';
+import 'package:mangajj/pages/read_page/view/read_page.dart';
 
 class AppModule extends Module {
   @override
@@ -23,6 +24,14 @@ class AppModule extends Module {
           '/imagepage',
           child: (context, args) => ImagePage(
             manga: args.data['manga'],
+          ),
+        ),
+        ChildRoute(
+          '/readpage',
+          child: (context, args) => ReadPage(
+            listChapters: args.data['listChapters'],
+            idChapter: args.data['idChapter'],
+            idManga: args.data['idManga'],
           ),
         ),
       ];

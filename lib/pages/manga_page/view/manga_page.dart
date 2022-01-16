@@ -7,14 +7,14 @@ import 'package:mangajj/api/models/manga.model.dart';
 import 'package:mangajj/layout/colors.dart';
 import 'package:mangajj/pages/manga_page/components/button_text.dart';
 import 'package:mangajj/pages/manga_page/components/card.dart';
-import 'package:mangajj/pages/manga_page/components/card_stack.dart';
+import 'package:mangajj/pages/manga_page/components/skeleton_card.dart';
 import 'package:mangajj/pages/manga_page/controller/manga_page.controller.dart';
 
 import 'package:mangajj/shared/appbar/default_appbar.dart';
 import 'package:mangajj/shared/text/text.dart';
 
 class MangaPage extends StatefulWidget {
-  final MangaModel manga;
+  final Manga manga;
   const MangaPage({
     Key? key,
     required this.manga,
@@ -28,6 +28,12 @@ class _MangaPageState extends State<MangaPage> {
   final controller = GetIt.I.get<MangaPageController>();
 
   @override
+  void initState() {
+    controller.list(widget.manga.id.toString());
+    super.initState();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     controller.loadMore = false;
@@ -39,7 +45,7 @@ class _MangaPageState extends State<MangaPage> {
 
     return Scaffold(
       appBar: DefaultAppBar(
-        title: widget.manga.title != null ? widget.manga.title! : '',
+        title: widget.manga.title ?? '',
         appBar: AppBar(),
       ),
       body: SingleChildScrollView(
@@ -115,13 +121,53 @@ class _MangaPageState extends State<MangaPage> {
                 ),
               ],
             ),
-            Wrap(
-              children: const [
-                CardChapter(),
-                CardChapter(),
-                CardChapter(),
-                CardChapterStack(),
-              ],
+            Observer(
+              builder: (_) {
+                if (controller.isSearch) {
+                  return Wrap(
+                    children: [
+                      for (var i = 0; i < 6; i++) const SkeletonCardChapter(),
+                    ],
+                  );
+                } else {
+                  if (controller.listChapters != null) {
+                    if (controller.listChapters!.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.only(top: 30.0),
+                        child: DefaultText(
+                          text: 'Nenhum capítulo encontrado',
+                        ),
+                      );
+                    } else {
+                      return Wrap(
+                        children: [
+                          for (var chapter in controller.listChapters!)
+                            CardChapter(
+                              chapter: chapter,
+                              urlImage: widget.manga.imageUrl ?? '',
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                'readpage',
+                                arguments: {
+                                  'listChapters': controller.listChapters,
+                                  'idChapter': chapter.id,
+                                  'idManga': widget.manga.id.toString(),
+                                },
+                              ),
+                            ),
+                        ],
+                      );
+                    }
+                  } else {
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 30.0),
+                      child: DefaultText(
+                        text: 'Erro ao buscar capítulos',
+                      ),
+                    );
+                  }
+                }
+              },
             ),
             const SizedBox(
               height: 30,

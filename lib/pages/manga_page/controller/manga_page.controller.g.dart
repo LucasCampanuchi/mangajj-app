@@ -24,6 +24,44 @@ mixin _$MangaPageController on _MangaPageControllerBase, Store {
     });
   }
 
+  final _$listChaptersAtom =
+      Atom(name: '_MangaPageControllerBase.listChapters');
+
+  @override
+  ObservableList<Chapter>? get listChapters {
+    _$listChaptersAtom.reportRead();
+    return super.listChapters;
+  }
+
+  @override
+  set listChapters(ObservableList<Chapter>? value) {
+    _$listChaptersAtom.reportWrite(value, super.listChapters, () {
+      super.listChapters = value;
+    });
+  }
+
+  final _$isSearchAtom = Atom(name: '_MangaPageControllerBase.isSearch');
+
+  @override
+  bool get isSearch {
+    _$isSearchAtom.reportRead();
+    return super.isSearch;
+  }
+
+  @override
+  set isSearch(bool value) {
+    _$isSearchAtom.reportWrite(value, super.isSearch, () {
+      super.isSearch = value;
+    });
+  }
+
+  final _$listAsyncAction = AsyncAction('_MangaPageControllerBase.list');
+
+  @override
+  Future<void> list(String id) {
+    return _$listAsyncAction.run(() => super.list(id));
+  }
+
   final _$_MangaPageControllerBaseActionController =
       ActionController(name: '_MangaPageControllerBase');
 
@@ -41,7 +79,9 @@ mixin _$MangaPageController on _MangaPageControllerBase, Store {
   @override
   String toString() {
     return '''
-loadMore: ${loadMore}
+loadMore: ${loadMore},
+listChapters: ${listChapters},
+isSearch: ${isSearch}
     ''';
   }
 }
