@@ -48,131 +48,142 @@ class _MangaPageState extends State<MangaPage> {
         title: widget.manga.title ?? '',
         appBar: AppBar(),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              width: size.width,
-              height: size.height * 0.4,
-              child: InkWell(
-                onTap: () => Navigator.pushNamed(
-                  context,
-                  'imagepage',
-                  arguments: {'manga': widget.manga},
-                ),
-                child: CachedNetworkImage(
-                  imageUrl: widget.manga.imageUrl ?? '',
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(top: 18.0, left: 26.0, right: 26.0),
-              child: Observer(
-                builder: (_) {
-                  if (controller.loadMore) {
-                    return Column(
-                      children: [
-                        DefaultText(
-                          fontSize: 20,
-                          text: widget.manga.synopsis ?? '',
-                        ),
-                        const ButtonText(
-                          text: 'ver menos',
-                        )
-                      ],
-                    );
-                  } else {
-                    return Column(
-                      children: [
-                        Text(
-                          widget.manga.synopsis ?? '',
-                          style: GoogleFonts.robotoCondensed(
-                            textStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.textPrimary,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          maxLines: 5,
-                        ),
-                        if (widget.manga.synopsis != null)
-                          const ButtonText(
-                            text: 'ver mais',
-                          )
-                      ],
-                    );
-                  }
-                },
-              ),
-            ),
-            Row(
-              children: const [
-                Padding(
-                  padding: EdgeInsets.all(26.0),
-                  child: DefaultText(
-                    text: 'Capítulos',
-                  ),
-                ),
-              ],
-            ),
-            Observer(
-              builder: (_) {
-                if (controller.isSearch) {
-                  return Wrap(
-                    children: [
-                      for (var i = 0; i < 6; i++) const SkeletonCardChapter(),
-                    ],
-                  );
-                } else {
-                  if (controller.listChapters != null) {
-                    if (controller.listChapters!.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.only(top: 30.0),
-                        child: DefaultText(
-                          text: 'Nenhum capítulo encontrado',
-                        ),
-                      );
-                    } else {
-                      return Wrap(
-                        children: [
-                          for (var chapter in controller.listChapters!)
-                            CardChapter(
-                              chapter: chapter,
-                              urlImage: widget.manga.imageUrl ?? '',
-                              onTap: () => Navigator.pushNamed(
-                                context,
-                                'readpage',
-                                arguments: {
-                                  'listChapters': controller.listChapters,
-                                  'chapter': chapter,
-                                  'idManga': widget.manga.id.toString(),
-                                },
-                              ),
-                            ),
-                        ],
-                      );
-                    }
-                  } else {
-                    return const Padding(
-                      padding: EdgeInsets.only(top: 30.0),
-                      child: DefaultText(
-                        text: 'Erro ao buscar capítulos',
+      body: RefreshIndicator(
+        color: Colors.black,
+        onRefresh: () async => controller.list(widget.manga.id.toString()),
+        child: ListView.builder(
+          itemBuilder: (ctx, idx) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: size.width,
+                    height: size.height * 0.4,
+                    child: InkWell(
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        'imagepage',
+                        arguments: {'manga': widget.manga},
                       ),
-                    );
-                  }
-                }
-              },
-            ),
-            const SizedBox(
-              height: 30,
-            )
-          ],
+                      child: CachedNetworkImage(
+                        imageUrl: widget.manga.imageUrl ?? '',
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 18.0, left: 26.0, right: 26.0),
+                    child: Observer(
+                      builder: (_) {
+                        if (controller.loadMore) {
+                          return Column(
+                            children: [
+                              DefaultText(
+                                fontSize: 20,
+                                text: widget.manga.synopsis ?? '',
+                              ),
+                              const ButtonText(
+                                text: 'ver menos',
+                              )
+                            ],
+                          );
+                        } else {
+                          return Column(
+                            children: [
+                              Text(
+                                widget.manga.synopsis ?? '',
+                                style: GoogleFonts.robotoCondensed(
+                                  textStyle: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.textPrimary,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                maxLines: 5,
+                              ),
+                              if (widget.manga.synopsis != null)
+                                const ButtonText(
+                                  text: 'ver mais',
+                                )
+                            ],
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(26.0),
+                        child: DefaultText(
+                          text: 'Capítulos',
+                        ),
+                      ),
+                    ],
+                  ),
+                  Observer(
+                    builder: (_) {
+                      if (controller.isSearch) {
+                        return Wrap(
+                          children: [
+                            for (var i = 0; i < 6; i++)
+                              const SkeletonCardChapter(),
+                          ],
+                        );
+                      } else {
+                        if (controller.listChapters != null) {
+                          if (controller.listChapters!.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.only(top: 30.0),
+                              child: DefaultText(
+                                text: 'Nenhum capítulo encontrado',
+                              ),
+                            );
+                          } else {
+                            return Wrap(
+                              children: [
+                                for (var chapter in controller.listChapters!)
+                                  CardChapter(
+                                    chapter: chapter,
+                                    urlImage: widget.manga.imageUrl ?? '',
+                                    onTap: () => Navigator.pushNamed(
+                                      context,
+                                      'readpage',
+                                      arguments: {
+                                        'listChapters': controller.listChapters,
+                                        'chapter': chapter,
+                                        'idManga': widget.manga.id.toString(),
+                                      },
+                                    ),
+                                  ),
+                              ],
+                            );
+                          }
+                        } else {
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 30.0),
+                            child: DefaultText(
+                              text: 'Erro ao buscar capítulos',
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  )
+                ],
+              ),
+            );
+          },
+          itemCount: 1,
         ),
       ),
     );

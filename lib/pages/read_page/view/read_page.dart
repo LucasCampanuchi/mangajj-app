@@ -4,7 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mangajj/api/models/chapter.model.dart';
 import 'package:mangajj/pages/read_page/components/button_chapter.dart';
-import 'package:mangajj/pages/read_page/components/reaload.dart';
+import 'package:mangajj/pages/read_page/components/reload.dart';
 import 'package:mangajj/pages/read_page/controller/read_page.controller.dart';
 import 'package:mangajj/shared/text/text.dart';
 import 'package:shimmer/shimmer.dart';
@@ -177,7 +177,7 @@ class _ReadPageState extends State<ReadPage> {
                                     maxScale: 4,
                                     child: CachedNetworkImage(
                                       imageUrl: page.imageUrl,
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fitWidth,
                                       placeholder: (context, url) =>
                                           Shimmer.fromColors(
                                         child: SizedBox(

@@ -87,7 +87,7 @@ class _CardMangaState extends State<CardManga> {
           ),
         ),
         SizedBox(
-          width: size.width * 0.43,
+          width: size.width * 0.35,
           child: Text(
             widget.manga.title ?? '',
             style: GoogleFonts.robotoCondensed(
