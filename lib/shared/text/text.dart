@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/layout/colors.dart';
 
-class DeafultText extends StatelessWidget {
+class DefaultText extends StatelessWidget {
   final String text;
   final double fontSize;
 
-  const DeafultText({
+  const DefaultText({
     Key? key,
     required this.text,
     this.fontSize = 22,

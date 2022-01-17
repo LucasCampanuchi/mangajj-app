@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/layout/colors.dart';
+import 'package:mangajj/pages/home_page/controller/home_page.controller.dart';
 
-class SearchBox extends StatelessWidget {
+class SearchBox extends StatefulWidget {
   const SearchBox({Key? key}) : super(key: key);
 
   @override
+  State<SearchBox> createState() => _SearchBoxState();
+}
+
+class _SearchBoxState extends State<SearchBox> {
+  @override
   Widget build(BuildContext context) {
+    final controller = GetIt.I.get<HomePageController>();
     Size size = MediaQuery.of(context).size;
+
+    UnfocusDisposition disposition = UnfocusDisposition.scope;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -25,20 +36,30 @@ class SearchBox extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(
+              Padding(
+                padding: const EdgeInsets.only(
                   left: 8.0,
                   right: 8.0,
                 ),
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: Icon(Icons.search),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      primaryFocus!.unfocus(disposition: disposition);
+                    });
+                    controller.search(context: context);
+                  },
+                  child: const SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Icon(Icons.search),
+                  ),
                 ),
               ),
               SizedBox(
-                width: size.width * 0.5,
+                width: size.width * 0.6,
                 child: TextField(
+                  controller: controller.searchText,
+                  onChanged: controller.setSearchText,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Pesquisar manga ou anime...',
