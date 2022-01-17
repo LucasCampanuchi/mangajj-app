@@ -30,7 +30,7 @@ class AppModule extends Module {
           '/readpage',
           child: (context, args) => ReadPage(
             listChapters: args.data['listChapters'],
-            idChapter: args.data['idChapter'],
+            chapter: args.data['chapter'],
             idManga: args.data['idManga'],
           ),
         ),

@@ -150,7 +150,7 @@ class _MangaPageState extends State<MangaPage> {
                                 'readpage',
                                 arguments: {
                                   'listChapters': controller.listChapters,
-                                  'idChapter': chapter.id,
+                                  'chapter': chapter,
                                   'idManga': widget.manga.id.toString(),
                                 },
                               ),

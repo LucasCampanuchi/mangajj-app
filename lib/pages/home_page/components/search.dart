@@ -46,7 +46,7 @@ class _SearchBoxState extends State<SearchBox> {
                     setState(() {
                       primaryFocus!.unfocus(disposition: disposition);
                     });
-                    controller.search(context);
+                    controller.search(context: context);
                   },
                   child: const SizedBox(
                     width: 40,
@@ -59,6 +59,7 @@ class _SearchBoxState extends State<SearchBox> {
                 width: size.width * 0.6,
                 child: TextField(
                   controller: controller.searchText,
+                  onChanged: controller.setSearchText,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Pesquisar manga ou anime...',

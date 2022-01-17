@@ -12,12 +12,24 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mangajj/shared/drawer/drawer.dart';
 import 'package:mangajj/shared/text/text.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final controller = GetIt.I.get<HomePageController>();
+
+  @override
+  void initState() {
+    controller.search(context: context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final controller = GetIt.I.get<HomePageController>();
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(

@@ -72,8 +72,22 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
   final _$searchAsyncAction = AsyncAction('_HomePageControllerBase.search');
 
   @override
-  Future<void> search(BuildContext context) {
-    return _$searchAsyncAction.run(() => super.search(context));
+  Future<void> search({BuildContext? context}) {
+    return _$searchAsyncAction.run(() => super.search(context: context));
+  }
+
+  final _$_HomePageControllerBaseActionController =
+      ActionController(name: '_HomePageControllerBase');
+
+  @override
+  void setSearchText(String value) {
+    final _$actionInfo = _$_HomePageControllerBaseActionController.startAction(
+        name: '_HomePageControllerBase.setSearchText');
+    try {
+      return super.setSearchText(value);
+    } finally {
+      _$_HomePageControllerBaseActionController.endAction(_$actionInfo);
+    }
   }
 
   @override

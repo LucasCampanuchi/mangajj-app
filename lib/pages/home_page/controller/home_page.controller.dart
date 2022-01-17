@@ -23,32 +23,35 @@ abstract class _HomePageControllerBase with Store {
   bool notSearch = true;
 
   @action
-  Future<void> search(BuildContext context) async {
-    if (searchText.text == '') {
-      message(context, "Campo de texto em branco");
-    } else {
-      isSearch = true;
-      notSearch = false;
+  void setSearchText(String value) {
+    search();
+  }
 
-      try {
-        Dio dio = await ApiUtil.createDio();
+  @action
+  Future<void> search({BuildContext? context}) async {
+    isSearch = true;
+    notSearch = false;
 
-        var response = await dio.get('manga?title=' + searchText.text);
+    try {
+      Dio dio = await ApiUtil.createDio();
 
-        if (response.statusCode == 200) {
-          listManga =
-              List.from(response.data).map((e) => Manga.fromJson(e)).toList();
-        } else if (response.statusCode == 404) {
-          listManga = [];
-        }
+      var response = await dio.get('manga?title=' + searchText.text);
 
-        isSearch = false;
-      } on DioError catch (dioError) {
-        isSearch = false;
-        message(context, DioExceptions.fromDioError(dioError).toString());
-      } catch (e) {
-        isSearch = false;
+      if (response.statusCode == 200) {
+        listManga =
+            List.from(response.data).map((e) => Manga.fromJson(e)).toList();
+      } else if (response.statusCode == 404) {
+        listManga = [];
       }
+
+      isSearch = false;
+    } on DioError catch (dioError) {
+      isSearch = false;
+      if (context != null) {
+        message(context, DioExceptions.fromDioError(dioError).toString());
+      }
+    } catch (e) {
+      isSearch = false;
     }
   }
 }

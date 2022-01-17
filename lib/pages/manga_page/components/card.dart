@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mangajj/api/models/chapter.model.dart';
 import 'package:mangajj/shared/text/text.dart';
 import 'package:shimmer/shimmer.dart';
@@ -18,6 +19,8 @@ class CardChapter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(chapter.status);
+
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [
@@ -30,7 +33,7 @@ class CardChapter extends StatelessWidget {
               height: size.width * 0.25,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(
-                  Radius.circular(30),
+                  Radius.circular(10),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -43,31 +46,58 @@ class CardChapter extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: CachedNetworkImage(
-                  imageUrl: urlImage ?? '',
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Shimmer.fromColors(
-                    child: Container(
+                child: Stack(
+                  children: [
+                    SizedBox(
                       width: size.width * 0.25,
-                      height: size.width * 0.25,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 2,
-                            offset: const Offset(0, 3),
+                      child: CachedNetworkImage(
+                        imageUrl: urlImage ?? '',
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          child: Container(
+                            width: size.width * 0.25,
+                            height: size.width * 0.25,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(30),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
+                          baseColor: Colors.black12,
+                          highlightColor: Colors.black26,
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                     ),
-                    baseColor: Colors.black12,
-                    highlightColor: Colors.black26,
-                  ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                    if (chapter.status == 'Not Found')
+                      Stack(
+                        children: [
+                          Container(
+                            width: size.width * 0.25,
+                            height: size.width * 0.25,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
+                          Center(
+                            child: SizedBox(
+                              height: 35,
+                              width: 35,
+                              child: SvgPicture.asset(
+                                'assets/svg/download.svg',
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                  ],
                 ),
               ),
             ),

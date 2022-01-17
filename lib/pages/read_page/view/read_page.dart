@@ -4,19 +4,22 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mangajj/api/models/chapter.model.dart';
 import 'package:mangajj/pages/read_page/components/button_chapter.dart';
+import 'package:mangajj/pages/read_page/components/reaload.dart';
 import 'package:mangajj/pages/read_page/controller/read_page.controller.dart';
-import 'package:mangajj/shared/appbar/default_appbar.dart';
+import 'package:mangajj/shared/text/text.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ReadPage extends StatefulWidget {
   final List<Chapter> listChapters;
-  final String idChapter;
+  final Chapter chapter;
   final String idManga;
 
   const ReadPage(
       {Key? key,
       required this.listChapters,
-      required this.idChapter,
+      required this.chapter,
       required this.idManga})
       : super(key: key);
 
@@ -25,11 +28,19 @@ class ReadPage extends StatefulWidget {
 }
 
 class _ReadPageState extends State<ReadPage> {
+  final itemKey = GlobalKey(debugLabel: '');
+
+  Future scroolTo() async {
+    final context = itemKey.currentContext!;
+    await Scrollable.ensureVisible(context);
+  }
+
   final controller = GetIt.I.get<ReadPageController>();
 
   @override
   void initState() {
-    controller.listPages(widget.idManga, widget.idChapter);
+    controller.chapterReverse = true;
+    controller.listPages(widget.idManga, widget.chapter, widget.listChapters);
     super.initState();
   }
 
@@ -43,10 +54,43 @@ class _ReadPageState extends State<ReadPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    final appBar = DefaultAppBar(
-      title: "Teste",
-      appBar: AppBar(),
+    final appBar = AppBar(
+      title: Observer(
+        builder: (_) {
+          return controller.chapter != null
+              ? DefaultText(
+                  text: '#Capítulo ' + controller.chapter!.number,
+                )
+              : DefaultText(
+                  text: '#Capítulo ' + widget.chapter.number,
+                );
+        },
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(
+            right: 15.0,
+          ),
+          child: Observer(builder: (_) {
+            return InkWell(
+              onTap: () => controller.reverseList(widget.listChapters),
+              child: controller.chapterReverse
+                  ? const Icon(
+                      Icons.arrow_forward,
+                    )
+                  : const Icon(
+                      Icons.arrow_back,
+                    ),
+            );
+          }),
+        )
+      ],
+      centerTitle: true,
+      backgroundColor: Colors.transparent,
+      bottomOpacity: 0.0,
+      elevation: 0.0,
     );
+
     final height = MediaQuery.of(context).size.height -
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top -
@@ -58,34 +102,64 @@ class _ReadPageState extends State<ReadPage> {
         width: size.width,
         child: Column(
           children: [
-            Container(
-              height: 60,
-              color: Theme.of(context).backgroundColor,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Wrap(
-                  children: [
-                    for (var chapter in widget.listChapters)
-                      ButtonChapter(chapter: chapter, idManga: widget.idManga),
-                  ],
-                ),
-              ),
-            ),
+            Observer(builder: (_) {
+              return Container(
+                height: 60,
+                color: Theme.of(context).backgroundColor,
+                child: controller.chapterReverse
+                    ? ScrollablePositionedList.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.listChapters.length,
+                        itemBuilder: (context, index) => ButtonChapter(
+                          chapter: widget.listChapters[index],
+                          idManga: widget.idManga,
+                          listChapters: widget.listChapters,
+                        ),
+                        itemScrollController: controller.itemScrollController,
+                        itemPositionsListener: controller.itemPositionsListener,
+                      )
+                    : ScrollablePositionedList.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.listChapters.length,
+                        itemBuilder: (context, index) => ButtonChapter(
+                          chapter: widget.listChapters[
+                              (widget.listChapters.length - 1) - index],
+                          idManga: widget.idManga,
+                          listChapters: widget.listChapters,
+                        ),
+                        itemScrollController: controller.itemScrollController,
+                        itemPositionsListener: controller.itemPositionsListener,
+                      ),
+              );
+            }),
             Observer(builder: (_) {
               if (controller.isSearch) {
-                return Text('CARREGANDO');
+                return SizedBox(
+                  height: height,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
+                );
               } else {
                 if (controller.pages != null) {
                   if (controller.pages!.isEmpty) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Text('VAZIO'),
-                      ],
+                    return Reload(
+                      text: 'Processando seu capítulo, puxe para atualizar',
+                      height: height,
+                      onRefresh: () async => controller.listPages(
+                        widget.idManga,
+                        controller.chapter!,
+                        widget.listChapters,
+                      ),
                     );
                   } else {
                     return DefaultTabController(
+                      initialIndex: controller.pages!.length - 1,
                       length: controller.pages!.length,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -93,106 +167,47 @@ class _ReadPageState extends State<ReadPage> {
                           SizedBox(
                             //Add this to give height
                             height: height,
-                            child: TabBarView(children: [
-                              for (var page in controller.pages!)
-                                InteractiveViewer(
-                                  clipBehavior: Clip.antiAlias,
-                                  panEnabled: true, // Set it to false
-                                  minScale: 1,
-                                  maxScale: 4,
-                                  child: CachedNetworkImage(
-                                    imageUrl: page.imageUrl,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        Shimmer.fromColors(
-                                      child: SizedBox(
-                                        width: size.width,
-                                        height: size.height * 0.6,
+                            child: TabBarView(
+                              children: [
+                                for (var page in controller.pages!.reversed)
+                                  InteractiveViewer(
+                                    clipBehavior: Clip.antiAlias,
+                                    panEnabled: true, // Set it to false
+                                    minScale: 1,
+                                    maxScale: 4,
+                                    child: CachedNetworkImage(
+                                      imageUrl: page.imageUrl,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          Shimmer.fromColors(
+                                        child: SizedBox(
+                                          width: size.width,
+                                          height: size.height * 0.6,
+                                        ),
+                                        baseColor: Colors.black12,
+                                        highlightColor: Colors.black26,
                                       ),
-                                      baseColor: Colors.black12,
-                                      highlightColor: Colors.black26,
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
                                     ),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
                                   ),
-                                ),
-                            ]),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     );
-                    /* return DefaultTabController(
-                      initialIndex: 0,
-                      length: controller.pages!.length,
-                      child: TabBarView(
-                        children: <Widget>[
-                          for (var page in controller.pages!)
-                            InteractiveViewer(
-                              clipBehavior: Clip.antiAlias,
-                              panEnabled: true, // Set it to false
-                              minScale: 1,
-                              maxScale: 4,
-                              child: CachedNetworkImage(
-                                imageUrl: page.imageUrl,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                  child: SizedBox(
-                                    width: size.width,
-                                    height: size.height * 0.6,
-                                  ),
-                                  baseColor: Colors.black12,
-                                  highlightColor: Colors.black26,
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ); */
                   }
-                  /* return Column(
-                  children: [
-                    SizedBox(
-                      width: size.width,
-                      height: 100,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Wrap(
-                          children: [
-                            for (var chapter in widget.listChapters)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  height: 30,
-                                  constraints: const BoxConstraints(
-                                    minWidth: 50,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 1,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(chapter.number),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    
-                  ],
-                ); */
                 } else {
-                  return Text('ERRO');
+                  return Reload(
+                    text: 'Erro ao carregar, puxe para atualizar',
+                    height: height,
+                    onRefresh: () async => controller.listPages(
+                      widget.idManga,
+                      controller.chapter!,
+                      widget.listChapters,
+                    ),
+                  );
                 }
               }
             }),
