@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/api/models/chapter.model.dart';
 import 'package:mangajj/layout/colors.dart';
 import 'package:mangajj/pages/read_page/controller/read_page.controller.dart';
-import 'package:mangajj/shared/text/text.dart';
 
 class ButtonChapter extends StatelessWidget {
   final Chapter chapter;

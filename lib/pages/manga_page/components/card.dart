@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/api/models/chapter.model.dart';
-import 'package:mangajj/shared/text/text.dart';
+import 'package:mangajj/layout/colors.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CardChapter extends StatelessWidget {
@@ -19,8 +20,6 @@ class CardChapter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(chapter.status);
-
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [
@@ -103,9 +102,21 @@ class CardChapter extends StatelessWidget {
             ),
           ),
         ),
-        DefaultText(
-          text: '#Cap. ' + chapter.number,
-        )
+        SizedBox(
+          width: size.width * 0.25,
+          child: Text(
+            chapter.number,
+            style: GoogleFonts.robotoCondensed(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+          ),
+        ),
       ],
     );
   }
