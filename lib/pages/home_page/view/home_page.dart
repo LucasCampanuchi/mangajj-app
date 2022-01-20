@@ -7,7 +7,6 @@ import 'package:mangajj/pages/home_page/components/skeleton_card.dart';
 import 'package:mangajj/pages/home_page/components/title.dart';
 import 'package:mangajj/pages/home_page/controller/home_page.controller.dart';
 import 'package:mangajj/shared/appbar/default_appbar.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mangajj/shared/drawer/drawer.dart';
 import 'package:mangajj/shared/text/text.dart';
@@ -53,36 +52,30 @@ class _HomePageState extends State<HomePage> {
               Observer(
                 builder: (_) {
                   if (!controller.notSearch) {
-                    if (controller.isSearch) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          SkeletonCard(),
-                          SkeletonCard(),
-                        ],
-                      );
-                    } else {
-                      if (controller.listManga != null) {
-                        if (controller.listManga!.isEmpty) {
-                          return const Padding(
-                            padding: EdgeInsets.only(top: 50.0, bottom: 50),
-                            child: DefaultText(
-                                text: 'Nenhum mangá foi encontrado.'),
-                          );
-                        } else {
-                          return Wrap(
-                            children: [
-                              for (var manga in controller.listManga!)
-                                CardManga(manga: manga)
-                            ],
-                          );
-                        }
-                      } else {
+                    if (controller.listManga != null) {
+                      if (controller.listManga!.isEmpty) {
                         return const Padding(
                           padding: EdgeInsets.only(top: 50.0, bottom: 50),
-                          child: DefaultText(text: 'Erro ao buscar mangá.'),
+                          child:
+                              DefaultText(text: 'Nenhum mangá foi encontrado.'),
+                        );
+                      } else {
+                        return Column(
+                          children: [
+                            Wrap(
+                              children: [
+                                for (var manga in controller.listManga!)
+                                  CardManga(manga: manga)
+                              ],
+                            ),
+                          ],
                         );
                       }
+                    } else {
+                      return const Padding(
+                        padding: EdgeInsets.only(top: 50.0, bottom: 50),
+                        child: DefaultText(text: 'Erro ao buscar mangá.'),
+                      );
                     }
                   } else {
                     return const Padding(
@@ -93,6 +86,32 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
               ),
+              Observer(builder: (_) {
+                if (controller.isSearch) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      SkeletonCard(),
+                      SkeletonCard(),
+                    ],
+                  );
+                } else {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50.0, bottom: 10.0),
+                        child: InkWell(
+                          onTap: () {
+                            controller.setSumPage(context);
+                          },
+                          child: const DefaultText(text: 'Ver mais...'),
+                        ),
+                      )
+                    ],
+                  );
+                }
+              }),
               const SizedBox(
                 height: 30.0,
               ),

@@ -43,8 +43,7 @@ abstract class _MangaPageControllerBase with Store {
       }
 
       isSearch = false;
-      // ignore: unused_catch_clause
-    } on DioError catch (dioError) {
+    } on DioError {
       isSearch = false;
     } catch (e) {
       isSearch = false;

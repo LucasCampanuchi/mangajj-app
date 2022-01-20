@@ -27,13 +27,13 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
   final _$listMangaAtom = Atom(name: '_HomePageControllerBase.listManga');
 
   @override
-  List<Manga>? get listManga {
+  ObservableList<Manga>? get listManga {
     _$listMangaAtom.reportRead();
     return super.listManga;
   }
 
   @override
-  set listManga(List<Manga>? value) {
+  set listManga(ObservableList<Manga>? value) {
     _$listMangaAtom.reportWrite(value, super.listManga, () {
       super.listManga = value;
     });
@@ -69,6 +69,36 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
     });
   }
 
+  final _$pageAtom = Atom(name: '_HomePageControllerBase.page');
+
+  @override
+  int get page {
+    _$pageAtom.reportRead();
+    return super.page;
+  }
+
+  @override
+  set page(int value) {
+    _$pageAtom.reportWrite(value, super.page, () {
+      super.page = value;
+    });
+  }
+
+  final _$lastPageAtom = Atom(name: '_HomePageControllerBase.lastPage');
+
+  @override
+  int get lastPage {
+    _$lastPageAtom.reportRead();
+    return super.lastPage;
+  }
+
+  @override
+  set lastPage(int value) {
+    _$lastPageAtom.reportWrite(value, super.lastPage, () {
+      super.lastPage = value;
+    });
+  }
+
   final _$searchAsyncAction = AsyncAction('_HomePageControllerBase.search');
 
   @override
@@ -91,12 +121,25 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
   }
 
   @override
+  void setSumPage(BuildContext context) {
+    final _$actionInfo = _$_HomePageControllerBaseActionController.startAction(
+        name: '_HomePageControllerBase.setSumPage');
+    try {
+      return super.setSumPage(context);
+    } finally {
+      _$_HomePageControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 searchText: ${searchText},
 listManga: ${listManga},
 isSearch: ${isSearch},
-notSearch: ${notSearch}
+notSearch: ${notSearch},
+page: ${page},
+lastPage: ${lastPage}
     ''';
   }
 }

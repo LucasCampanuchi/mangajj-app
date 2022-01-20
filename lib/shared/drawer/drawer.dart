@@ -50,9 +50,7 @@ class HomeDrawer extends StatelessWidget {
                         ),
                         Switch(
                           value: true,
-                          onChanged: (value) {
-                            //print(value);
-                          },
+                          onChanged: (value) {},
                           activeTrackColor: Colors.black12,
                           activeColor: Colors.black,
                         ),
