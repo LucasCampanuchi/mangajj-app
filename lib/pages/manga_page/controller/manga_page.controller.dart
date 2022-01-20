@@ -36,7 +36,7 @@ abstract class _MangaPageControllerBase with Store {
         manga = Manga.fromJson(response.data);
         listChapters = ObservableList<Chapter>();
         if (manga.chapters_list != null) {
-          listChapters!.addAll(manga.chapters_list!);
+          listChapters!.addAll(manga.chapters_list!.data!);
         }
       } else if (response.statusCode == 404) {
         listChapters = ObservableList<Chapter>();
