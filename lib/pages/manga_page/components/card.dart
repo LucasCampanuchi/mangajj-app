@@ -19,8 +19,6 @@ class CardChapter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(chapter.status);
-
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [

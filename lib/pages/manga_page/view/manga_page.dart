@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/api/models/manga.model.dart';
 import 'package:mangajj/layout/colors.dart';
+import 'package:mangajj/pages/manga_page/components/button_genre.dart';
 import 'package:mangajj/pages/manga_page/components/button_text.dart';
 import 'package:mangajj/pages/manga_page/components/card.dart';
 import 'package:mangajj/pages/manga_page/components/skeleton_card.dart';
@@ -116,6 +117,13 @@ class _MangaPageState extends State<MangaPage> {
                         }
                       },
                     ),
+                  ),
+                  Wrap(
+                    children: [
+                      if (widget.manga.genres != null)
+                        for (var genre in widget.manga.genres!)
+                          ButtonGenre(genre: genre),
+                    ],
                   ),
                   Row(
                     children: const [

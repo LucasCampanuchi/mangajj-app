@@ -14,7 +14,7 @@ abstract class _HomePageControllerBase with Store {
   TextEditingController searchText = TextEditingController();
 
   @observable
-  List<Manga>? listManga;
+  ObservableList<Manga>? listManga = ObservableList<Manga>();
 
   @observable
   bool isSearch = false;
@@ -22,9 +22,27 @@ abstract class _HomePageControllerBase with Store {
   @observable
   bool notSearch = true;
 
+  @observable
+  int page = 0;
+
+  @observable
+  int lastPage = 0;
+
   @action
   void setSearchText(String value) {
+    page = 0;
+    listManga = ObservableList<Manga>();
     search();
+  }
+
+  @action
+  void setSumPage(BuildContext context) {
+    if (page < lastPage - 1) {
+      page++;
+      search(context: context);
+    } else {
+      message(context, "Última Página");
+    }
   }
 
   @action
@@ -35,13 +53,18 @@ abstract class _HomePageControllerBase with Store {
     try {
       Dio dio = await ApiUtil.createDio();
 
-      var response = await dio.get('manga?title=' + searchText.text);
+      var response = await dio.get(
+        'manga/?page=' + page.toString() + '&limit=10&title=' + searchText.text,
+      );
 
       if (response.statusCode == 200) {
-        listManga =
-            List.from(response.data).map((e) => Manga.fromJson(e)).toList();
+        listManga!.addAll(List.from(response.data['data'])
+            .map((e) => Manga.fromJson(e))
+            .toList());
+
+        lastPage = response.data['last_page'];
       } else if (response.statusCode == 404) {
-        listManga = [];
+        listManga = ObservableList<Manga>();
       }
 
       isSearch = false;

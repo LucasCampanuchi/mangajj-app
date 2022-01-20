@@ -44,15 +44,13 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
-                          child: const Icon(Icons.wb_sunny_outlined),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 15.0),
+                          child: Icon(Icons.wb_sunny_outlined),
                         ),
                         Switch(
                           value: true,
-                          onChanged: (value) {
-                            print(value);
-                          },
+                          onChanged: (value) {},
                           activeTrackColor: Colors.black12,
                           activeColor: Colors.black,
                         ),

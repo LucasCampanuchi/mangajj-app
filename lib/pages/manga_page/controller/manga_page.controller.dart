@@ -43,9 +43,7 @@ abstract class _MangaPageControllerBase with Store {
       }
 
       isSearch = false;
-    } on DioError catch (dioError) {
-      print(dioError.message);
-
+    } on DioError {
       isSearch = false;
     } catch (e) {
       isSearch = false;
