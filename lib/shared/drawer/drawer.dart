@@ -54,7 +54,9 @@ class HomeDrawer extends StatelessWidget {
                           activeTrackColor: Colors.black12,
                           activeColor: Colors.black,
                         ),
-                        const Icon(Icons.dark_mode_outlined),
+                        const Icon(
+                          Icons.dark_mode_outlined,
+                        ),
                       ],
                     )
                   ],

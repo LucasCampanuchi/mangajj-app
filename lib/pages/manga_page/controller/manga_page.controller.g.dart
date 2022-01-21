@@ -55,11 +55,26 @@ mixin _$MangaPageController on _MangaPageControllerBase, Store {
     });
   }
 
+  final _$pageAtom = Atom(name: '_MangaPageControllerBase.page');
+
+  @override
+  int get page {
+    _$pageAtom.reportRead();
+    return super.page;
+  }
+
+  @override
+  set page(int value) {
+    _$pageAtom.reportWrite(value, super.page, () {
+      super.page = value;
+    });
+  }
+
   final _$listAsyncAction = AsyncAction('_MangaPageControllerBase.list');
 
   @override
-  Future<void> list(String id) {
-    return _$listAsyncAction.run(() => super.list(id));
+  Future<void> list(String id, BuildContext context) {
+    return _$listAsyncAction.run(() => super.list(id, context));
   }
 
   final _$_MangaPageControllerBaseActionController =
@@ -77,11 +92,23 @@ mixin _$MangaPageController on _MangaPageControllerBase, Store {
   }
 
   @override
+  void setSumPage(String id, BuildContext context) {
+    final _$actionInfo = _$_MangaPageControllerBaseActionController.startAction(
+        name: '_MangaPageControllerBase.setSumPage');
+    try {
+      return super.setSumPage(id, context);
+    } finally {
+      _$_MangaPageControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 loadMore: ${loadMore},
 listChapters: ${listChapters},
-isSearch: ${isSearch}
+isSearch: ${isSearch},
+page: ${page}
     ''';
   }
 }

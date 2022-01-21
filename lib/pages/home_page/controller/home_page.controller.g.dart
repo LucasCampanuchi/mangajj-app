@@ -110,11 +110,11 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
       ActionController(name: '_HomePageControllerBase');
 
   @override
-  void setSearchText(String value) {
+  void setSearchText(String? text) {
     final _$actionInfo = _$_HomePageControllerBaseActionController.startAction(
         name: '_HomePageControllerBase.setSearchText');
     try {
-      return super.setSearchText(value);
+      return super.setSearchText(text);
     } finally {
       _$_HomePageControllerBaseActionController.endAction(_$actionInfo);
     }

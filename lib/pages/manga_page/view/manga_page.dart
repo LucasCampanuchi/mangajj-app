@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mangajj/api/models/chapter.model.dart';
 import 'package:mangajj/api/models/manga.model.dart';
 import 'package:mangajj/layout/colors.dart';
 import 'package:mangajj/pages/manga_page/components/button_genre.dart';
@@ -13,6 +14,7 @@ import 'package:mangajj/pages/manga_page/controller/manga_page.controller.dart';
 
 import 'package:mangajj/shared/appbar/default_appbar.dart';
 import 'package:mangajj/shared/text/text.dart';
+import 'package:mobx/mobx.dart';
 
 class MangaPage extends StatefulWidget {
   final Manga manga;
@@ -30,7 +32,9 @@ class _MangaPageState extends State<MangaPage> {
 
   @override
   void initState() {
-    controller.list(widget.manga.id.toString());
+    controller.page = 0;
+    controller.listChapters = ObservableList<Chapter>();
+    controller.list(widget.manga.id.toString(), context);
     super.initState();
   }
 
@@ -51,7 +55,10 @@ class _MangaPageState extends State<MangaPage> {
       ),
       body: RefreshIndicator(
         color: Colors.black,
-        onRefresh: () async => controller.list(widget.manga.id.toString()),
+        onRefresh: () async {
+          controller.page = 0;
+          controller.list(widget.manga.id.toString(), context);
+        },
         child: ListView.builder(
           itemBuilder: (ctx, idx) {
             return SingleChildScrollView(
@@ -137,53 +144,80 @@ class _MangaPageState extends State<MangaPage> {
                   ),
                   Observer(
                     builder: (_) {
-                      if (controller.isSearch) {
-                        return Wrap(
-                          children: [
-                            for (var i = 0; i < 6; i++)
-                              const SkeletonCardChapter(),
-                          ],
-                        );
-                      } else {
-                        if (controller.listChapters != null) {
-                          if (controller.listChapters!.isEmpty) {
-                            return const Padding(
-                              padding: EdgeInsets.only(top: 30.0),
-                              child: DefaultText(
-                                text: 'Nenhum capítulo encontrado',
-                              ),
-                            );
-                          } else {
-                            return Wrap(
-                              children: [
-                                for (var chapter in controller.listChapters!)
-                                  CardChapter(
-                                    chapter: chapter,
-                                    urlImage: widget.manga.imageUrl ?? '',
-                                    onTap: () => Navigator.pushNamed(
-                                      context,
-                                      'readpage',
-                                      arguments: {
-                                        'listChapters': controller.listChapters,
-                                        'chapter': chapter,
-                                        'idManga': widget.manga.id.toString(),
-                                      },
-                                    ),
-                                  ),
-                              ],
-                            );
-                          }
-                        } else {
+                      if (controller.listChapters != null) {
+                        if (controller.listChapters!.isEmpty &&
+                            !controller.isSearch) {
                           return const Padding(
                             padding: EdgeInsets.only(top: 30.0),
                             child: DefaultText(
-                              text: 'Erro ao buscar capítulos',
+                              text: 'Nenhum capítulo encontrado',
                             ),
                           );
+                        } else {
+                          return Wrap(
+                            children: [
+                              for (var chapter in controller.listChapters!)
+                                CardChapter(
+                                  chapter: chapter,
+                                  urlImage: widget.manga.imageUrl ?? '',
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    'readpage',
+                                    arguments: {
+                                      'listChapters': controller.listChapters,
+                                      'chapter': chapter,
+                                      'idManga': widget.manga.id.toString(),
+                                    },
+                                  ),
+                                ),
+                            ],
+                          );
                         }
+                      } else {
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 30.0),
+                          child: DefaultText(
+                            text: 'Erro ao buscar capítulos',
+                          ),
+                        );
                       }
                     },
                   ),
+                  Observer(builder: (_) {
+                    if (controller.isSearch) {
+                      return Wrap(
+                        children: [
+                          for (var i = 0; i < 6; i++)
+                            const SkeletonCardChapter(),
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          if (controller.listChapters!.isNotEmpty)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 50.0, bottom: 10.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      controller.setSumPage(
+                                        widget.manga.id.toString(),
+                                        context,
+                                      );
+                                    },
+                                    child:
+                                        const DefaultText(text: 'Ver mais...'),
+                                  ),
+                                )
+                              ],
+                            ),
+                        ],
+                      );
+                    }
+                  }),
                   const SizedBox(
                     height: 30,
                   )

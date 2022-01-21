@@ -12,12 +12,12 @@ class SearchBox extends StatefulWidget {
 }
 
 class _SearchBoxState extends State<SearchBox> {
+  final controller = GetIt.I.get<HomePageController>();
+  UnfocusDisposition disposition = UnfocusDisposition.scope;
+
   @override
   Widget build(BuildContext context) {
-    final controller = GetIt.I.get<HomePageController>();
     Size size = MediaQuery.of(context).size;
-
-    UnfocusDisposition disposition = UnfocusDisposition.scope;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +46,7 @@ class _SearchBoxState extends State<SearchBox> {
                     setState(() {
                       primaryFocus!.unfocus(disposition: disposition);
                     });
-                    controller.search(context: context);
+                    controller.setSearchText(null);
                   },
                   child: const SizedBox(
                     width: 40,

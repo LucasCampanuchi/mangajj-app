@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:mangajj/api/connection/api.dart';
 import 'package:mangajj/api/models/chapter.model.dart';
 import 'package:mangajj/api/models/manga.model.dart';
+import 'package:mangajj/shared/message/message.dart';
 import 'package:mobx/mobx.dart';
 part 'manga_page.controller.g.dart';
 
@@ -11,30 +13,42 @@ abstract class _MangaPageControllerBase with Store {
   @observable
   bool loadMore = false;
 
+  @observable
+  ObservableList<Chapter>? listChapters = ObservableList<Chapter>();
+
+  @observable
+  bool isSearch = false;
+
+  @observable
+  int page = 0;
+
   @action
   void setLoadMore() {
     loadMore = !loadMore;
   }
 
-  @observable
-  ObservableList<Chapter>? listChapters;
-
-  @observable
-  bool isSearch = false;
+  @action
+  void setSumPage(String id, BuildContext context) {
+    page++;
+    list(id, context);
+  }
 
   @action
-  Future<void> list(String id) async {
+  Future<void> list(String id, BuildContext context) async {
     isSearch = true;
 
     try {
       Manga? manga;
       Dio dio = await ApiUtil.createDio();
 
-      var response = await dio.get('manga/' + id + '?expanded_content=true');
+      var response = await dio.get('manga/' +
+          id +
+          '?expanded_content=true&chapters_page=' +
+          page.toString());
 
       if (response.statusCode == 200) {
         manga = Manga.fromJson(response.data);
-        listChapters = ObservableList<Chapter>();
+
         if (manga.chapters_list != null) {
           listChapters!.addAll(manga.chapters_list!.data!);
         }
@@ -43,7 +57,8 @@ abstract class _MangaPageControllerBase with Store {
       }
 
       isSearch = false;
-    } on DioError {
+    } on DioError catch (error) {
+      message(context, error.message);
       isSearch = false;
     } catch (e) {
       isSearch = false;

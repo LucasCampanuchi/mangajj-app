@@ -29,7 +29,7 @@ abstract class _HomePageControllerBase with Store {
   int lastPage = 0;
 
   @action
-  void setSearchText(String value) {
+  void setSearchText(String? text) {
     page = 0;
     listManga = ObservableList<Manga>();
     search();
@@ -58,9 +58,22 @@ abstract class _HomePageControllerBase with Store {
       );
 
       if (response.statusCode == 200) {
-        listManga!.addAll(List.from(response.data['data'])
+        List<Manga> temporaryList = List.from(response.data['data'])
             .map((e) => Manga.fromJson(e))
-            .toList());
+            .toList();
+
+        bool contains = false;
+        for (var manga in temporaryList) {
+          contains = false;
+          for (var m in listManga!) {
+            if (manga.id == m.id) {
+              contains = true;
+            }
+          }
+          if (!contains) {
+            listManga!.add(manga);
+          }
+        }
 
         lastPage = response.data['last_page'];
       } else if (response.statusCode == 404) {
