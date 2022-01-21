@@ -54,7 +54,7 @@ abstract class _HomePageControllerBase with Store {
       Dio dio = await ApiUtil.createDio();
 
       var response = await dio.get(
-        'manga/?page=' + page.toString() + '&limit=10&title=' + searchText.text,
+        'manga?page=' + page.toString() + '&limit=10&title=' + searchText.text,
       );
 
       if (response.statusCode == 200) {
