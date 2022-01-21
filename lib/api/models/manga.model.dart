@@ -1,4 +1,4 @@
-import 'chapter.model.dart';
+import 'package:mangajj/api/models/chapterslist.model.dart';
 
 class Manga {
   Manga({
@@ -24,7 +24,7 @@ class Manga {
   late final String? synopsis;
   late final String? imageUrl;
   // ignore: non_constant_identifier_names
-  late final List<Chapter>? chapters_list;
+  late final ChaptersList? chapters_list;
 
   Manga.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -38,11 +38,11 @@ class Manga {
         : null;
     synopsis = json['synopsis'];
     imageUrl = json['image_url'];
-    chapters_list = json['chapters_list'] != null
-        ? List.from(json['chapters_list'])
-            .map((e) => Chapter.fromJson(e))
-            .toList()
-        : null;
+    if (json.containsKey('chapters_list') && json['chapters_list'] != null) {
+      chapters_list = ChaptersList.fromJson(json['chapters_list']);
+    } else {
+      chapters_list = null;
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -56,9 +56,9 @@ class Manga {
     _data['popularity'] = popularity;
     _data['genres'] = genres;
     _data['image_url'] = imageUrl;
-    _data['chapters_list'] = chapters_list != null
-        ? chapters_list!.map((e) => e.toJson()).toList()
-        : null;
+    if (chapters_list != null) {
+      _data['chapters_list'] = chapters_list!.toJson();
+    }
 
     return _data;
   }
