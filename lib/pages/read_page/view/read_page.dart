@@ -171,26 +171,25 @@ class _ReadPageState extends State<ReadPage> {
                               children: [
                                 for (var page in controller.pages!.reversed)
                                   InteractiveViewer(
-                                    clipBehavior: Clip.antiAlias,
-                                    panEnabled: true, // Set it to false
-                                    minScale: 1,
-                                    maxScale: 4,
-                                    child: CachedNetworkImage(
-                                      imageUrl: page.imageUrl,
-                                      fit: BoxFit.fitWidth,
-                                      placeholder: (context, url) =>
-                                          Shimmer.fromColors(
-                                        child: SizedBox(
-                                          width: size.width,
-                                          height: size.height * 0.6,
+                                      clipBehavior: Clip.antiAlias,
+                                      panEnabled: true, // Set it to false
+                                      minScale: 1,
+                                      maxScale: 4,
+                                      child: CachedNetworkImage(
+                                        imageUrl: page.imageUrl,
+                                        fit: BoxFit.fitWidth,
+                                        placeholder: (context, url) =>
+                                            Shimmer.fromColors(
+                                          child: SizedBox(
+                                            width: size.width,
+                                            height: size.height * 0.6,
+                                          ),
+                                          baseColor: Colors.black12,
+                                          highlightColor: Colors.black26,
                                         ),
-                                        baseColor: Colors.black12,
-                                        highlightColor: Colors.black26,
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
-                                    ),
-                                  ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      )),
                               ],
                             ),
                           ),

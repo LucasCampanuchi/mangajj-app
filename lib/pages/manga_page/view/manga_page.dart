@@ -28,6 +28,7 @@ class MangaPage extends StatefulWidget {
 }
 
 class _MangaPageState extends State<MangaPage> {
+  ScrollController scrollController = ScrollController();
   final controller = GetIt.I.get<MangaPageController>();
 
   @override
@@ -36,6 +37,16 @@ class _MangaPageState extends State<MangaPage> {
     controller.listChapters = ObservableList<Chapter>();
     controller.list(widget.manga.id.toString(), context);
     super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        controller.setSumPage(
+          widget.manga.id.toString(),
+          context,
+        );
+      }
+    });
   }
 
   @override
@@ -60,6 +71,7 @@ class _MangaPageState extends State<MangaPage> {
           controller.list(widget.manga.id.toString(), context);
         },
         child: ListView.builder(
+          controller: scrollController,
           itemBuilder: (ctx, idx) {
             return SingleChildScrollView(
               child: Column(
