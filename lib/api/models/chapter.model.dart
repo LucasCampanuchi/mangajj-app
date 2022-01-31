@@ -14,7 +14,7 @@ class Chapter {
   late final String url;
   late final String number;
   late final String releaseDate;
-  late final String status;
+  late String status;
   late final int idManga;
   late final dynamic createdAt;
 

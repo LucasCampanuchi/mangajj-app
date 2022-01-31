@@ -68,6 +68,7 @@ class _MangaPageState extends State<MangaPage> {
         color: Colors.black,
         onRefresh: () async {
           controller.page = 0;
+          controller.listChapters = ObservableList<Chapter>();
           controller.list(widget.manga.id.toString(), context);
         },
         child: ListView.builder(
@@ -196,39 +197,17 @@ class _MangaPageState extends State<MangaPage> {
                     },
                   ),
                   Observer(builder: (_) {
-                    if (controller.isSearch) {
-                      return Wrap(
-                        children: [
-                          for (var i = 0; i < 6; i++)
-                            const SkeletonCardChapter(),
-                        ],
-                      );
-                    } else {
-                      return Column(
-                        children: [
-                          if (controller.listChapters!.isNotEmpty)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 50.0, bottom: 10.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      controller.setSumPage(
-                                        widget.manga.id.toString(),
-                                        context,
-                                      );
-                                    },
-                                    child:
-                                        const DefaultText(text: 'Ver mais...'),
-                                  ),
-                                )
-                              ],
-                            ),
-                        ],
-                      );
-                    }
+                    return Column(
+                      children: [
+                        if (controller.isSearch)
+                          Wrap(
+                            children: [
+                              for (var i = 0; i < 6; i++)
+                                const SkeletonCardChapter(),
+                            ],
+                          )
+                      ],
+                    );
                   }),
                   const SizedBox(
                     height: 30,

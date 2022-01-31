@@ -12,15 +12,30 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
   final _$searchTextAtom = Atom(name: '_HomePageControllerBase.searchText');
 
   @override
-  TextEditingController get searchText {
+  Observable<TextEditingController> get searchText {
     _$searchTextAtom.reportRead();
     return super.searchText;
   }
 
   @override
-  set searchText(TextEditingController value) {
+  set searchText(Observable<TextEditingController> value) {
     _$searchTextAtom.reportWrite(value, super.searchText, () {
       super.searchText = value;
+    });
+  }
+
+  final _$textAtom = Atom(name: '_HomePageControllerBase.text');
+
+  @override
+  String? get text {
+    _$textAtom.reportRead();
+    return super.text;
+  }
+
+  @override
+  set text(String? value) {
+    _$textAtom.reportWrite(value, super.text, () {
+      super.text = value;
     });
   }
 
@@ -110,11 +125,22 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
       ActionController(name: '_HomePageControllerBase');
 
   @override
-  void setSearchText(String? text) {
+  void setSearchText(String? t) {
     final _$actionInfo = _$_HomePageControllerBaseActionController.startAction(
         name: '_HomePageControllerBase.setSearchText');
     try {
-      return super.setSearchText(text);
+      return super.setSearchText(t);
+    } finally {
+      _$_HomePageControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void searchByText(String t) {
+    final _$actionInfo = _$_HomePageControllerBaseActionController.startAction(
+        name: '_HomePageControllerBase.searchByText');
+    try {
+      return super.searchByText(t);
     } finally {
       _$_HomePageControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -135,6 +161,7 @@ mixin _$HomePageController on _HomePageControllerBase, Store {
   String toString() {
     return '''
 searchText: ${searchText},
+text: ${text},
 listManga: ${listManga},
 isSearch: ${isSearch},
 notSearch: ${notSearch},

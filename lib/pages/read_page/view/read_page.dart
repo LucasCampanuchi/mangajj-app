@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -6,6 +8,7 @@ import 'package:mangajj/api/models/chapter.model.dart';
 import 'package:mangajj/pages/read_page/components/button_chapter.dart';
 import 'package:mangajj/pages/read_page/components/reload.dart';
 import 'package:mangajj/pages/read_page/controller/read_page.controller.dart';
+import 'package:mangajj/shared/drawer/end_drawer.dart';
 import 'package:mangajj/shared/text/text.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -37,6 +40,12 @@ class _ReadPageState extends State<ReadPage> {
 
   final controller = GetIt.I.get<ReadPageController>();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void _openEndDrawer() {
+    _scaffoldKey.currentState!.openEndDrawer();
+  }
+
   @override
   void initState() {
     controller.chapterReverse = true;
@@ -66,24 +75,24 @@ class _ReadPageState extends State<ReadPage> {
                 );
         },
       ),
+      leading: InkWell(
+        onTap: () => Navigator.of(context).pop(),
+        child: const Icon(
+          Icons.arrow_back,
+          color: Colors.black,
+        ),
+      ),
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(
-            right: 15.0,
+        InkWell(
+          onTap: () => _openEndDrawer(),
+          child: const SizedBox(
+            width: 56,
+            height: 56,
+            child: Icon(
+              Icons.menu,
+            ),
           ),
-          child: Observer(builder: (_) {
-            return InkWell(
-              onTap: () => controller.reverseList(widget.listChapters),
-              child: controller.chapterReverse
-                  ? const Icon(
-                      Icons.arrow_forward,
-                    )
-                  : const Icon(
-                      Icons.arrow_back,
-                    ),
-            );
-          }),
-        )
+        ),
       ],
       centerTitle: true,
       backgroundColor: Colors.transparent,
@@ -98,40 +107,16 @@ class _ReadPageState extends State<ReadPage> {
 
     return Scaffold(
       appBar: appBar,
+      key: _scaffoldKey,
+      endDrawerEnableOpenDragGesture: false,
+      endDrawer: ReadDrawer(
+        listChapters: widget.listChapters,
+        idManga: widget.idManga,
+      ),
       body: SizedBox(
         width: size.width,
         child: Column(
           children: [
-            Observer(builder: (_) {
-              return Container(
-                height: 60,
-                color: Theme.of(context).backgroundColor,
-                child: controller.chapterReverse
-                    ? ScrollablePositionedList.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: widget.listChapters.length,
-                        itemBuilder: (context, index) => ButtonChapter(
-                          chapter: widget.listChapters[index],
-                          idManga: widget.idManga,
-                          listChapters: widget.listChapters,
-                        ),
-                        itemScrollController: controller.itemScrollController,
-                        itemPositionsListener: controller.itemPositionsListener,
-                      )
-                    : ScrollablePositionedList.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: widget.listChapters.length,
-                        itemBuilder: (context, index) => ButtonChapter(
-                          chapter: widget.listChapters[
-                              (widget.listChapters.length - 1) - index],
-                          idManga: widget.idManga,
-                          listChapters: widget.listChapters,
-                        ),
-                        itemScrollController: controller.itemScrollController,
-                        itemPositionsListener: controller.itemPositionsListener,
-                      ),
-              );
-            }),
             Observer(builder: (_) {
               if (controller.isSearch) {
                 return SizedBox(
@@ -158,41 +143,37 @@ class _ReadPageState extends State<ReadPage> {
                       ),
                     );
                   } else {
-                    return DefaultTabController(
-                      initialIndex: controller.pages!.length - 1,
-                      length: controller.pages!.length,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                    return SizedBox(
+                      height: height,
+                      child: PageView(
+                        onPageChanged: (value) async {
+                          if (value == controller.antP - 2) {
+                            await controller.savePages();
+                          }
+                        },
+                        reverse: true,
+                        controller: controller.pageController,
                         children: <Widget>[
-                          SizedBox(
-                            //Add this to give height
-                            height: height,
-                            child: TabBarView(
-                              children: [
-                                for (var page in controller.pages!.reversed)
-                                  InteractiveViewer(
-                                      clipBehavior: Clip.antiAlias,
-                                      panEnabled: true, // Set it to false
-                                      minScale: 1,
-                                      maxScale: 4,
-                                      child: CachedNetworkImage(
-                                        imageUrl: page.imageUrl,
-                                        fit: BoxFit.fitWidth,
-                                        placeholder: (context, url) =>
-                                            Shimmer.fromColors(
-                                          child: SizedBox(
-                                            width: size.width,
-                                            height: size.height * 0.6,
-                                          ),
-                                          baseColor: Colors.black12,
-                                          highlightColor: Colors.black26,
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                      )),
-                              ],
+                          for (var page in controller.pagesT)
+                            InteractiveViewer(
+                              clipBehavior: Clip.antiAlias,
+                              panEnabled: true, // Set it to false
+                              minScale: 1,
+                              maxScale: 4,
+                              child: Image.file(File(page.imageUrl)),
                             ),
-                          ),
+                          if (controller.isSearchPages)
+                            SizedBox(
+                              height: height,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  CircularProgressIndicator(
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
+                            )
                         ],
                       ),
                     );

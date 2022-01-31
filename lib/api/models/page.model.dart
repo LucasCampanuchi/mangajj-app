@@ -1,5 +1,5 @@
-class Page {
-  Page({
+class PageModel {
+  PageModel({
     required this.id,
     required this.chapterId,
     required this.imageUrl,
@@ -7,10 +7,10 @@ class Page {
   });
   late final String id;
   late final String chapterId;
-  late final String imageUrl;
+  late String imageUrl;
   late final int pageNumber;
 
-  Page.fromJson(Map<String, dynamic> json) {
+  PageModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     chapterId = json['chapterId'];
     imageUrl = json['imageUrl'];

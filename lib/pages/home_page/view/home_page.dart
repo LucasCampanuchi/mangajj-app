@@ -10,6 +10,7 @@ import 'package:mangajj/shared/appbar/default_appbar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mangajj/shared/drawer/drawer.dart';
 import 'package:mangajj/shared/text/text.dart';
+import 'package:mobx/mobx.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     controller.search(context: context);
+
+    autorun((r) => print("FOI" + controller.searchText.value.text));
     super.initState();
   }
 
@@ -42,7 +45,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.only(top: 20.0),
           child: Column(
             children: [
-              const SearchBox(),
+              SearchBox(),
               const Padding(
                 padding: EdgeInsets.only(top: 30.0, bottom: 15),
                 child: TitleDefault(
@@ -53,7 +56,8 @@ class _HomePageState extends State<HomePage> {
                 builder: (_) {
                   if (!controller.notSearch) {
                     if (controller.listManga != null) {
-                      if (controller.listManga!.isEmpty) {
+                      if (controller.listManga!.isEmpty &&
+                          !controller.isSearch) {
                         return const Padding(
                           padding: EdgeInsets.only(top: 50.0, bottom: 50),
                           child:

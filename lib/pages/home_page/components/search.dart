@@ -4,14 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/layout/colors.dart';
 import 'package:mangajj/pages/home_page/controller/home_page.controller.dart';
 
-class SearchBox extends StatefulWidget {
-  const SearchBox({Key? key}) : super(key: key);
+class SearchBox extends StatelessWidget {
+  SearchBox({Key? key}) : super(key: key);
 
-  @override
-  State<SearchBox> createState() => _SearchBoxState();
-}
-
-class _SearchBoxState extends State<SearchBox> {
   final controller = GetIt.I.get<HomePageController>();
   UnfocusDisposition disposition = UnfocusDisposition.scope;
 
@@ -43,10 +38,7 @@ class _SearchBoxState extends State<SearchBox> {
                 ),
                 child: InkWell(
                   onTap: () {
-                    setState(() {
-                      primaryFocus!.unfocus(disposition: disposition);
-                    });
-                    controller.setSearchText(null);
+                    controller.searchByText(controller.text!);
                   },
                   child: const SizedBox(
                     width: 40,
@@ -58,8 +50,7 @@ class _SearchBoxState extends State<SearchBox> {
               SizedBox(
                 width: size.width * 0.6,
                 child: TextField(
-                  controller: controller.searchText,
-                  onChanged: controller.setSearchText,
+                  controller: controller.searchText.value,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Pesquisar manga ou anime...',

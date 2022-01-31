@@ -12,15 +12,30 @@ mixin _$ReadPageController on _ReadPageControllerBase, Store {
   final _$pagesAtom = Atom(name: '_ReadPageControllerBase.pages');
 
   @override
-  ObservableList<Page>? get pages {
+  ObservableList<PageModel>? get pages {
     _$pagesAtom.reportRead();
     return super.pages;
   }
 
   @override
-  set pages(ObservableList<Page>? value) {
+  set pages(ObservableList<PageModel>? value) {
     _$pagesAtom.reportWrite(value, super.pages, () {
       super.pages = value;
+    });
+  }
+
+  final _$pagesTAtom = Atom(name: '_ReadPageControllerBase.pagesT');
+
+  @override
+  ObservableList<PageModel> get pagesT {
+    _$pagesTAtom.reportRead();
+    return super.pagesT;
+  }
+
+  @override
+  set pagesT(ObservableList<PageModel> value) {
+    _$pagesTAtom.reportWrite(value, super.pagesT, () {
+      super.pagesT = value;
     });
   }
 
@@ -36,6 +51,22 @@ mixin _$ReadPageController on _ReadPageControllerBase, Store {
   set isSearch(bool value) {
     _$isSearchAtom.reportWrite(value, super.isSearch, () {
       super.isSearch = value;
+    });
+  }
+
+  final _$isSearchPagesAtom =
+      Atom(name: '_ReadPageControllerBase.isSearchPages');
+
+  @override
+  bool get isSearchPages {
+    _$isSearchPagesAtom.reportRead();
+    return super.isSearchPages;
+  }
+
+  @override
+  set isSearchPages(bool value) {
+    _$isSearchPagesAtom.reportWrite(value, super.isSearchPages, () {
+      super.isSearchPages = value;
     });
   }
 
@@ -104,6 +135,68 @@ mixin _$ReadPageController on _ReadPageControllerBase, Store {
     });
   }
 
+  final _$pageControllerAtom =
+      Atom(name: '_ReadPageControllerBase.pageController');
+
+  @override
+  PageController get pageController {
+    _$pageControllerAtom.reportRead();
+    return super.pageController;
+  }
+
+  @override
+  set pageController(PageController value) {
+    _$pageControllerAtom.reportWrite(value, super.pageController, () {
+      super.pageController = value;
+    });
+  }
+
+  final _$pAtom = Atom(name: '_ReadPageControllerBase.p');
+
+  @override
+  int get p {
+    _$pAtom.reportRead();
+    return super.p;
+  }
+
+  @override
+  set p(int value) {
+    _$pAtom.reportWrite(value, super.p, () {
+      super.p = value;
+    });
+  }
+
+  final _$antPAtom = Atom(name: '_ReadPageControllerBase.antP');
+
+  @override
+  int get antP {
+    _$antPAtom.reportRead();
+    return super.antP;
+  }
+
+  @override
+  set antP(int value) {
+    _$antPAtom.reportWrite(value, super.antP, () {
+      super.antP = value;
+    });
+  }
+
+  final _$scrollControllerAtom =
+      Atom(name: '_ReadPageControllerBase.scrollController');
+
+  @override
+  ScrollController get scrollController {
+    _$scrollControllerAtom.reportRead();
+    return super.scrollController;
+  }
+
+  @override
+  set scrollController(ScrollController value) {
+    _$scrollControllerAtom.reportWrite(value, super.scrollController, () {
+      super.scrollController = value;
+    });
+  }
+
   final _$listPagesAsyncAction =
       AsyncAction('_ReadPageControllerBase.listPages');
 
@@ -112,6 +205,13 @@ mixin _$ReadPageController on _ReadPageControllerBase, Store {
       {bool jump = true}) {
     return _$listPagesAsyncAction
         .run(() => super.listPages(idManga, c, listC, jump: jump));
+  }
+
+  final _$scrollAsyncAction = AsyncAction('_ReadPageControllerBase.scroll');
+
+  @override
+  Future<void> scroll(List<Chapter> listC) {
+    return _$scrollAsyncAction.run(() => super.scroll(listC));
   }
 
   final _$_ReadPageControllerBaseActionController =
@@ -132,11 +232,17 @@ mixin _$ReadPageController on _ReadPageControllerBase, Store {
   String toString() {
     return '''
 pages: ${pages},
+pagesT: ${pagesT},
 isSearch: ${isSearch},
+isSearchPages: ${isSearchPages},
 chapter: ${chapter},
 chapterReverse: ${chapterReverse},
 itemScrollController: ${itemScrollController},
-itemPositionsListener: ${itemPositionsListener}
+itemPositionsListener: ${itemPositionsListener},
+pageController: ${pageController},
+p: ${p},
+antP: ${antP},
+scrollController: ${scrollController}
     ''';
   }
 }

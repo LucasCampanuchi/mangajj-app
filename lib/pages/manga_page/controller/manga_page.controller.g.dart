@@ -70,6 +70,30 @@ mixin _$MangaPageController on _MangaPageControllerBase, Store {
     });
   }
 
+  final _$idMangaAtom = Atom(name: '_MangaPageControllerBase.idManga');
+
+  @override
+  String get idManga {
+    _$idMangaAtom.reportRead();
+    return super.idManga;
+  }
+
+  @override
+  set idManga(String value) {
+    _$idMangaAtom.reportWrite(value, super.idManga, () {
+      super.idManga = value;
+    });
+  }
+
+  final _$setSumPageReturnAsyncAction =
+      AsyncAction('_MangaPageControllerBase.setSumPageReturn');
+
+  @override
+  Future<ObservableList<Chapter>?> setSumPageReturn(BuildContext context) {
+    return _$setSumPageReturnAsyncAction
+        .run(() => super.setSumPageReturn(context));
+  }
+
   final _$listAsyncAction = AsyncAction('_MangaPageControllerBase.list');
 
   @override
@@ -103,12 +127,24 @@ mixin _$MangaPageController on _MangaPageControllerBase, Store {
   }
 
   @override
+  void updateList(String idChapter) {
+    final _$actionInfo = _$_MangaPageControllerBaseActionController.startAction(
+        name: '_MangaPageControllerBase.updateList');
+    try {
+      return super.updateList(idChapter);
+    } finally {
+      _$_MangaPageControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 loadMore: ${loadMore},
 listChapters: ${listChapters},
 isSearch: ${isSearch},
-page: ${page}
+page: ${page},
+idManga: ${idManga}
     ''';
   }
 }

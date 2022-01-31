@@ -22,6 +22,9 @@ abstract class _MangaPageControllerBase with Store {
   @observable
   int page = 0;
 
+  @observable
+  String idManga = '';
+
   @action
   void setLoadMore() {
     loadMore = !loadMore;
@@ -34,8 +37,19 @@ abstract class _MangaPageControllerBase with Store {
   }
 
   @action
+  Future<ObservableList<Chapter>?> setSumPageReturn(
+      BuildContext context) async {
+    page++;
+    await list(idManga, context);
+
+    return listChapters;
+  }
+
+  @action
   Future<void> list(String id, BuildContext context) async {
     isSearch = true;
+
+    idManga = id;
 
     try {
       Manga? manga;
@@ -63,5 +77,19 @@ abstract class _MangaPageControllerBase with Store {
     } catch (e) {
       isSearch = false;
     }
+  }
+
+  @action
+  void updateList(String idChapter) {
+    if (listChapters != null) {
+      for (var chapter in listChapters!) {
+        if (chapter.id == idChapter) {
+          print(chapter.status);
+          chapter.status = 'Done';
+          print('aw' + chapter.status);
+        }
+      }
+    }
+    listChapters = listChapters;
   }
 }

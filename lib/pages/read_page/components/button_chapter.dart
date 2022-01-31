@@ -59,7 +59,7 @@ class ButtonChapter extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    chapter.number,
+                    '#Capítulo ' + chapter.number,
                     style: GoogleFonts.robotoCondensed(
                       textStyle: TextStyle(
                         fontSize: 16,

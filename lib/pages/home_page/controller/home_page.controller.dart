@@ -11,7 +11,11 @@ class HomePageController = _HomePageControllerBase with _$HomePageController;
 
 abstract class _HomePageControllerBase with Store {
   @observable
-  TextEditingController searchText = TextEditingController();
+  Observable<TextEditingController> searchText =
+      Observable<TextEditingController>(TextEditingController());
+
+  @observable
+  String? text = '';
 
   @observable
   ObservableList<Manga>? listManga = ObservableList<Manga>();
@@ -29,7 +33,12 @@ abstract class _HomePageControllerBase with Store {
   int lastPage = 0;
 
   @action
-  void setSearchText(String? text) {
+  void setSearchText(String? t) {
+    text = t;
+  }
+
+  @action
+  void searchByText(String t) {
     page = 0;
     listManga = ObservableList<Manga>();
     search();
@@ -53,8 +62,16 @@ abstract class _HomePageControllerBase with Store {
     try {
       Dio dio = await ApiUtil.createDio();
 
+      print('manga?page=' +
+          page.toString() +
+          '&limit=10&title=' +
+          searchText.value.text);
+
       var response = await dio.get(
-        'manga?page=' + page.toString() + '&limit=10&title=' + searchText.text,
+        'manga?page=' +
+            page.toString() +
+            '&limit=10&title=' +
+            searchText.value.text,
       );
 
       if (response.statusCode == 200) {

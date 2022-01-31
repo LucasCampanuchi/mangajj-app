@@ -18,6 +18,24 @@ class ApiUtil {
     return dio;
   }
 
+  static Future<Dio> createDioDownloadImage() async {
+    var dio = Dio(
+      BaseOptions(
+          baseUrl: 'https://mangajj.herokuapp.com/',
+          headers: {
+            "Accept": "application/json",
+            'Access-Control-Allow-Origin': 'true'
+          },
+          responseType: ResponseType.bytes,
+          validateStatus: (status) {
+            return status! <= 500;
+          }),
+    );
+    dio.options.connectTimeout = 60000;
+    dio.options.receiveTimeout = 60000;
+    return dio;
+  }
+
   static String getUserExceptionMessage(DioError? dioError) {
     return '${dioError!.response!.statusCode}: ${dioError.response!.statusMessage}.';
   }
