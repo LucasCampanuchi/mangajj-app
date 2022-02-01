@@ -143,38 +143,56 @@ class _ReadPageState extends State<ReadPage> {
                       ),
                     );
                   } else {
-                    return SizedBox(
-                      height: height,
-                      child: PageView(
-                        onPageChanged: (value) async {
-                          if (value == controller.antP - 2) {
-                            await controller.savePages();
-                          }
-                        },
-                        reverse: true,
-                        controller: controller.pageController,
-                        children: <Widget>[
-                          for (var page in controller.pagesT)
-                            InteractiveViewer(
-                              clipBehavior: Clip.antiAlias,
-                              panEnabled: true, // Set it to false
-                              minScale: 1,
-                              maxScale: 4,
-                              child: Image.file(File(page.imageUrl)),
-                            ),
-                          if (controller.isSearchPages)
-                            SizedBox(
+                    return RefreshIndicator(
+                      color: Colors.black,
+                      onRefresh: () async => controller.listPages(
+                        widget.idManga,
+                        controller.chapter!,
+                        widget.listChapters,
+                      ),
+                      child: SizedBox(
+                        height: height,
+                        child: ListView.builder(
+                          itemBuilder: (ctx, idx) {
+                            return SizedBox(
                               height: height,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  CircularProgressIndicator(
-                                    color: Colors.black,
-                                  ),
+                              child: PageView(
+                                onPageChanged: (value) {
+                                  print(controller.pagesT);
+                                  if (value == controller.antP - 2) {
+                                    controller.savePages();
+                                  }
+                                },
+                                reverse: true,
+                                controller: controller.pageController,
+                                children: <Widget>[
+                                  for (var page in controller.pagesT)
+                                    InteractiveViewer(
+                                      clipBehavior: Clip.antiAlias,
+                                      panEnabled: true, // Set it to false
+                                      minScale: 1,
+                                      maxScale: 4,
+                                      child: Image.file(File(page.imageUrl)),
+                                    ),
+                                  if (controller.isSearchPages)
+                                    SizedBox(
+                                      height: height,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          CircularProgressIndicator(
+                                            color: Colors.black,
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                 ],
                               ),
-                            )
-                        ],
+                            );
+                          },
+                          itemCount: 1,
+                        ),
                       ),
                     );
                   }

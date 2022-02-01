@@ -68,7 +68,7 @@ abstract class _HomePageControllerBase with Store {
           searchText.value.text);
 
       var response = await dio.get(
-        'manga?page=' +
+        'manga/?page=' +
             page.toString() +
             '&limit=10&title=' +
             searchText.value.text,

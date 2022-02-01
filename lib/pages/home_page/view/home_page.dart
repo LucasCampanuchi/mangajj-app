@@ -20,13 +20,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ScrollController scrollController = ScrollController();
   final controller = GetIt.I.get<HomePageController>();
 
   @override
   void initState() {
     controller.search(context: context);
 
-    autorun((r) => print("FOI" + controller.searchText.value.text));
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        controller.setSumPage(context);
+      }
+    });
+
+    /* autorun((r) => print("FOI" + controller.searchText.value.text)); */
     super.initState();
   }
 
@@ -41,6 +49,7 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: const HomeDrawer(),
       body: SingleChildScrollView(
+        controller: scrollController,
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Column(
@@ -91,30 +100,18 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               Observer(builder: (_) {
-                if (controller.isSearch) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SkeletonCard(),
-                      SkeletonCard(),
-                    ],
-                  );
-                } else {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 50.0, bottom: 10.0),
-                        child: InkWell(
-                          onTap: () {
-                            controller.setSumPage(context);
-                          },
-                          child: const DefaultText(text: 'Ver mais...'),
-                        ),
-                      )
-                    ],
-                  );
-                }
+                return Column(
+                  children: [
+                    if (controller.isSearch)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SkeletonCard(),
+                          SkeletonCard(),
+                        ],
+                      ),
+                  ],
+                );
               }),
               const SizedBox(
                 height: 30.0,

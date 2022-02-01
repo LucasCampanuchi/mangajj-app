@@ -111,11 +111,11 @@ abstract class _ReadPageControllerBase with Store {
 
     try {
       for (int i = antP; i < p; i++) {
+        await Future.delayed(const Duration(milliseconds: 500));
         Response r = await dioImage.get(
           pages![i].imageUrl,
         );
-
-        print(r);
+        print(pages![i].imageUrl);
 
         String name = pages![i]
             .imageUrl
@@ -124,16 +124,15 @@ abstract class _ReadPageControllerBase with Store {
         String path = tempDir.path + name;
 
         File file = File(path);
+
         var raf = file.openSync(mode: FileMode.write);
         raf.writeFromSync(r.data);
         await raf.close();
         pages![i].imageUrl = path;
 
-        print(pages![i]);
-
         pagesT.add(pages![i]);
       }
-      print(pagesT);
+
       antP = p;
       p += 3;
       isSearchPages = false;
