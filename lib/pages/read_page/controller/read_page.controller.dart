@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mangajj/api/connection/api.dart';
@@ -115,7 +114,6 @@ abstract class _ReadPageControllerBase with Store {
         Response r = await dioImage.get(
           pages![i].imageUrl,
         );
-        print(pages![i].imageUrl);
 
         String name = pages![i]
             .imageUrl
@@ -138,7 +136,6 @@ abstract class _ReadPageControllerBase with Store {
       isSearchPages = false;
     } catch (e) {
       isSearchPages = false;
-      print(e);
     }
   }
 

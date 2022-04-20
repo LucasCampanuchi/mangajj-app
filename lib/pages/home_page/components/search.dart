@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/layout/colors.dart';
 import 'package:mangajj/pages/home_page/controller/home_page.controller.dart';
 
+// ignore: must_be_immutable
 class SearchBox extends StatelessWidget {
   SearchBox({Key? key}) : super(key: key);
 

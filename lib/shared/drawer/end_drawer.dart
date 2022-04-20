@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mangajj/api/models/chapter.model.dart';
-import 'package:mangajj/pages/manga_page/controller/manga_page.controller.dart';
 import 'package:mangajj/pages/read_page/components/button_chapter.dart';
 import 'package:mangajj/pages/read_page/controller/read_page.controller.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'controller/end_drawer.controller.dart';
 

@@ -10,7 +10,6 @@ import 'package:mangajj/shared/appbar/default_appbar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mangajj/shared/drawer/drawer.dart';
 import 'package:mangajj/shared/text/text.dart';
-import 'package:mobx/mobx.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

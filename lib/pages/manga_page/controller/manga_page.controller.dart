@@ -84,9 +84,7 @@ abstract class _MangaPageControllerBase with Store {
     if (listChapters != null) {
       for (var chapter in listChapters!) {
         if (chapter.id == idChapter) {
-          print(chapter.status);
           chapter.status = 'Done';
-          print('aw' + chapter.status);
         }
       }
     }

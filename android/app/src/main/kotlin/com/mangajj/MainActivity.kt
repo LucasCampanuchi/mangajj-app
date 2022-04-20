@@ -1,4 +1,4 @@
-package com.example.mangajj
+package com.mangajj
 
 import io.flutter.embedding.android.FlutterActivity
 

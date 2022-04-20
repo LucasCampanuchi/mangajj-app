@@ -62,11 +62,6 @@ abstract class _HomePageControllerBase with Store {
     try {
       Dio dio = await ApiUtil.createDio();
 
-      print('manga?page=' +
-          page.toString() +
-          '&limit=10&title=' +
-          searchText.value.text);
-
       var response = await dio.get(
         'manga/?page=' +
             page.toString() +
@@ -76,7 +71,11 @@ abstract class _HomePageControllerBase with Store {
 
       if (response.statusCode == 200) {
         List<Manga> temporaryList = List.from(response.data['data'])
-            .map((e) => Manga.fromJson(e))
+            .map(
+              (e) => Manga.fromJson(
+                e,
+              ),
+            )
             .toList();
 
         bool contains = false;
