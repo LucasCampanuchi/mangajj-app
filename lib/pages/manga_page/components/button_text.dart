@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mangajj/layout/colors.dart';
 import 'package:mangajj/pages/manga_page/controller/manga_page.controller.dart';
 
 class ButtonText extends StatelessWidget {
@@ -24,10 +23,9 @@ class ButtonText extends StatelessWidget {
             child: Text(
               text,
               style: GoogleFonts.robotoCondensed(
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
-                  color: AppColors.textPrimary,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

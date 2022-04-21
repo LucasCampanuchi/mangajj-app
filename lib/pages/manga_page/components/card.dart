@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/api/models/chapter.model.dart';
-import 'package:mangajj/layout/colors.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CardChapter extends StatelessWidget {
@@ -107,10 +106,9 @@ class CardChapter extends StatelessWidget {
           child: Text(
             chapter.number,
             style: GoogleFonts.robotoCondensed(
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
-                color: AppColors.textPrimary,
               ),
             ),
             overflow: TextOverflow.ellipsis,

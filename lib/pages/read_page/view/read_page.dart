@@ -74,7 +74,6 @@ class _ReadPageState extends State<ReadPage> {
         onTap: () => Navigator.of(context).pop(),
         child: const Icon(
           Icons.arrow_back,
-          color: Colors.black,
         ),
       ),
       actions: [
@@ -119,9 +118,7 @@ class _ReadPageState extends State<ReadPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      CircularProgressIndicator(
-                        color: Colors.black,
-                      ),
+                      CircularProgressIndicator(),
                     ],
                   ),
                 );

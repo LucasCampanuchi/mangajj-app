@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/api/models/manga.model.dart';
-import 'package:mangajj/layout/colors.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CardManga extends StatefulWidget {
@@ -91,10 +90,9 @@ class _CardMangaState extends State<CardManga> {
           child: Text(
             widget.manga.title ?? '',
             style: GoogleFonts.robotoCondensed(
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w400,
-                color: AppColors.textPrimary,
               ),
             ),
             overflow: TextOverflow.ellipsis,

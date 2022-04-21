@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:mangajj/layout/colors.dart';
+
+import '../text/text.dart';
 
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -14,16 +14,7 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
-        title,
-        style: GoogleFonts.robotoCondensed(
-          textStyle: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textPrimary,
-          ),
-        ),
-      ),
+      title: DefaultText(text: title),
       centerTitle: true,
       backgroundColor: Colors.transparent,
       bottomOpacity: 0.0,

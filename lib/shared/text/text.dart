@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mangajj/layout/colors.dart';
 
 class DefaultText extends StatelessWidget {
   final String text;
@@ -20,7 +19,6 @@ class DefaultText extends StatelessWidget {
         textStyle: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.w400,
-          color: AppColors.textPrimary,
         ),
       ),
     );

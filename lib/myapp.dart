@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-
-import 'layout/colors.dart';
+import 'package:provider/provider.dart';
+import 'themes/theme_changer.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Manga JJ',
-      theme: ThemeData(
-        primarySwatch: AppColors.mcgpalette0,
-        backgroundColor: AppColors.primary,
-      ),
-    ).modular();
+    ThemeChanger themeChanger = Provider.of<ThemeChanger>(
+      context,
+      listen: false,
+    );
+    themeChanger.setInitialTheme();
+
+    return Consumer<ThemeChanger>(
+      builder: (context, theme, _) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Manga JJ',
+        theme: theme.getTheme(),
+      ).modular(),
+    );
   }
 }

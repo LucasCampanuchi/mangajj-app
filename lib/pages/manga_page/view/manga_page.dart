@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mangajj/api/models/chapter.model.dart';
 import 'package:mangajj/api/models/manga.model.dart';
-import 'package:mangajj/layout/colors.dart';
 import 'package:mangajj/pages/manga_page/components/button_genre.dart';
 import 'package:mangajj/pages/manga_page/components/button_text.dart';
 import 'package:mangajj/pages/manga_page/components/card.dart';
@@ -119,10 +118,9 @@ class _MangaPageState extends State<MangaPage> {
                               Text(
                                 widget.manga.synopsis ?? '',
                                 style: GoogleFonts.robotoCondensed(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w400,
-                                    color: AppColors.textPrimary,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -160,9 +158,12 @@ class _MangaPageState extends State<MangaPage> {
                       if (controller.listChapters != null) {
                         if (controller.listChapters!.isEmpty &&
                             !controller.isSearch) {
-                          return const Padding(
-                            padding: EdgeInsets.only(top: 30.0),
-                            child: DefaultText(
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              top: 30.0,
+                              bottom: size.height * 0.1,
+                            ),
+                            child: const DefaultText(
                               text: 'Nenhum capítulo encontrado',
                             ),
                           );

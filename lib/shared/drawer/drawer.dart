@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mangajj/shared/text/text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:mangajj/themes/theme_changer.dart';
+import 'package:provider/provider.dart';
 import 'components/list_tile.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -9,7 +10,9 @@ class HomeDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger themeChanger = Provider.of<ThemeChanger>(context);
     Size size = MediaQuery.of(context).size;
+
     return Drawer(
       child: Column(
         children: <Widget>[
@@ -49,8 +52,10 @@ class HomeDrawer extends StatelessWidget {
                           child: Icon(Icons.wb_sunny_outlined),
                         ),
                         Switch(
-                          value: true,
-                          onChanged: (value) {},
+                          value: themeChanger.isDark(),
+                          onChanged: (bool value) {
+                            themeChanger.setThemeMode(value);
+                          },
                           activeTrackColor: Colors.black12,
                           activeColor: Colors.black,
                         ),
